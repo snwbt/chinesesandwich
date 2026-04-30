@@ -1,0 +1,179 @@
+<UserControl x:Class="WeddingFinancePlanner.Views.DashboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:conv="clr-namespace:WeddingFinancePlanner.Converters"
+             Background="{StaticResource BackgroundPrimaryBrush}">
+    <UserControl.Resources>
+        <conv:CurrencyConverter x:Key="Currency"/>
+        <conv:DateFormatConverter x:Key="DateFmt"/>
+        <conv:PaymentStatusToColorConverter x:Key="StatusColor"/>
+        <conv:PaymentStatusToBackgroundConverter x:Key="StatusBg"/>
+        <conv:BoolToVisibilityConverter x:Key="BoolVis"/>
+    </UserControl.Resources>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="32">
+            <!-- Header -->
+            <TextBlock Text="{Binding PartnerAName, StringFormat='Welcome back — here\'s your wedding budget overview'}"
+                       Style="{StaticResource H1Text}" Margin="0,0,0,4"/>
+            <TextBlock Text="All amounts in your local currency" Style="{StaticResource BodySmallText}" Margin="0,0,0,24"/>
+
+            <!-- Stat Cards Row -->
+            <Grid Margin="0,0,0,24">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="16"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="16"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="16"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Total Budget -->
+                <Border Grid.Column="0" Style="{StaticResource CardBorder}">
+                    <StackPanel>
+                        <TextBlock Text="TOTAL BUDGET" Style="{StaticResource CaptionText}" Margin="0,0,0,8"/>
+                        <TextBlock Text="{Binding TotalBudget, Converter={StaticResource Currency}, StringFormat='${0}'}"
+                                   Style="{StaticResource DisplayText}" Foreground="{StaticResource TextPrimaryBrush}"/>
+                        <TextBlock Text="Your wedding budget" Style="{StaticResource BodySmallText}" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Total Committed -->
+                <Border Grid.Column="2" Style="{StaticResource CardBorder}">
+                    <StackPanel>
+                        <TextBlock Text="COMMITTED" Style="{StaticResource CaptionText}" Margin="0,0,0,8"/>
+                        <TextBlock Text="{Binding TotalCommitted, Converter={StaticResource Currency}, StringFormat='${0}'}"
+                                   Style="{StaticResource DisplayText}" Foreground="{StaticResource AccentPrimaryBrush}"/>
+                        <TextBlock Text="Total across all payments" Style="{StaticResource BodySmallText}" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Total Paid -->
+                <Border Grid.Column="4" Style="{StaticResource CardBorder}">
+                    <StackPanel>
+                        <TextBlock Text="PAID" Style="{StaticResource CaptionText}" Margin="0,0,0,8"/>
+                        <TextBlock Text="{Binding TotalSpent, Converter={StaticResource Currency}, StringFormat='${0}'}"
+                                   Style="{StaticResource DisplayText}" Foreground="{StaticResource SuccessBrush}"/>
+                        <TextBlock Text="Payments completed" Style="{StaticResource BodySmallText}" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Unpaid -->
+                <Border Grid.Column="6" Style="{StaticResource CardBorder}">
+                    <StackPanel>
+                        <TextBlock Text="STILL OWED" Style="{StaticResource CaptionText}" Margin="0,0,0,8"/>
+                        <TextBlock Text="{Binding TotalUnpaid, Converter={StaticResource Currency}, StringFormat='${0}'}"
+                                   Style="{StaticResource DisplayText}" Foreground="{StaticResource WarningBrush}"/>
+                        <TextBlock Text="Remaining unpaid" Style="{StaticResource BodySmallText}" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- Partner Balance Banner -->
+            <Border Style="{StaticResource CardBorder}" Margin="0,0,0,24"
+                    Background="{StaticResource AccentSecondaryLightBrush}"
+                    BorderBrush="{StaticResource AccentSecondaryBrush}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Path Data="{StaticResource IconSplit}" Width="20" Height="20" Margin="0,0,16,0"
+                          Fill="{StaticResource AccentSecondaryBrush}" Stretch="Uniform" VerticalAlignment="Center"/>
+                    <StackPanel Grid.Column="1">
+                        <TextBlock Text="PARTNER BALANCE" Style="{StaticResource CaptionText}" Margin="0,0,0,4"/>
+                        <TextBlock Text="{Binding PartnerBalanceLabel}" Style="{StaticResource H3Text}"
+                                   Foreground="{StaticResource TextPrimaryBrush}"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Two-column: Upcoming + Overdue -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="24"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Upcoming Payments -->
+                <Border Grid.Column="0" Style="{StaticResource CardBorder}">
+                    <StackPanel>
+                        <TextBlock Text="Upcoming Payments" Style="{StaticResource H3Text}" Margin="0,0,0,16"/>
+                        <ItemsControl ItemsSource="{Binding UpcomingPayments}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Padding="0,8" BorderBrush="{StaticResource BorderSubtleBrush}"
+                                            BorderThickness="0,0,0,1">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding Description}" Style="{StaticResource BodyText}"
+                                                           TextTrimming="CharacterEllipsis"/>
+                                                <TextBlock Text="{Binding DueDate, Converter={StaticResource DateFmt}}"
+                                                           Style="{StaticResource BodySmallText}"/>
+                                            </StackPanel>
+                                            <TextBlock Grid.Column="1" VerticalAlignment="Center"
+                                                       Text="{Binding Amount, Converter={StaticResource Currency}, StringFormat='${0}'}"
+                                                       Style="{StaticResource H3Text}" Foreground="{StaticResource AccentPrimaryBrush}"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <TextBlock Text="No upcoming payments in the next 30 days"
+                                   Style="{StaticResource BodySecondaryText}"
+                                   Visibility="{Binding UpcomingPayments.Count, Converter={StaticResource BoolVis}, ConverterParameter=invert}"
+                                   HorizontalAlignment="Center" Margin="0,16"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Overdue Payments -->
+                <Border Grid.Column="2" Style="{StaticResource CardBorder}"
+                        BorderBrush="{StaticResource DangerBrush}">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                            <Path Data="{StaticResource IconWarning}" Width="16" Height="16" Margin="0,0,8,0"
+                                  Fill="{StaticResource DangerBrush}" Stretch="Uniform" VerticalAlignment="Center"/>
+                            <TextBlock Text="Overdue Payments" Style="{StaticResource H3Text}"
+                                       Foreground="{StaticResource DangerBrush}"/>
+                        </StackPanel>
+                        <ItemsControl ItemsSource="{Binding OverduePayments}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Padding="0,8" BorderBrush="{StaticResource BorderSubtleBrush}"
+                                            BorderThickness="0,0,0,1">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding Description}" Style="{StaticResource BodyText}"
+                                                           TextTrimming="CharacterEllipsis"/>
+                                                <TextBlock Text="{Binding DueDate, Converter={StaticResource DateFmt}}"
+                                                           Style="{StaticResource BodySmallText}"
+                                                           Foreground="{StaticResource DangerBrush}"/>
+                                            </StackPanel>
+                                            <TextBlock Grid.Column="1" VerticalAlignment="Center"
+                                                       Text="{Binding Amount, Converter={StaticResource Currency}, StringFormat='${0}'}"
+                                                       Style="{StaticResource H3Text}" Foreground="{StaticResource DangerBrush}"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <TextBlock Text="No overdue payments"
+                                   Style="{StaticResource BodySecondaryText}"
+                                   Visibility="{Binding OverduePayments.Count, Converter={StaticResource BoolVis}, ConverterParameter=invert}"
+                                   HorizontalAlignment="Center" Margin="0,16"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

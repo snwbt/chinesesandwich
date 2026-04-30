@@ -1,0 +1,42 @@
+<UserControl x:Class="WeddingFinancePlanner.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="{StaticResource BackgroundPrimaryBrush}">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="32" MaxWidth="560">
+            <TextBlock Text="Settings" Style="{StaticResource H1Text}" Margin="0,0,0,24"/>
+
+            <Border Style="{StaticResource CardBorder}">
+                <StackPanel>
+                    <TextBlock Text="Partner Names" Style="{StaticResource H2Text}" Margin="0,0,0,16"/>
+                    <StackPanel Style="{StaticResource FormRow}">
+                        <TextBlock Text="Partner A Name" Style="{StaticResource FormLabel}"/>
+                        <TextBox Text="{Binding PartnerAName, UpdateSourceTrigger=PropertyChanged}"/>
+                    </StackPanel>
+                    <StackPanel Style="{StaticResource FormRow}">
+                        <TextBlock Text="Partner B Name" Style="{StaticResource FormLabel}"/>
+                        <TextBox Text="{Binding PartnerBName, UpdateSourceTrigger=PropertyChanged}"/>
+                    </StackPanel>
+
+                    <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,1,0,0" Padding="0,16,0,0" Margin="0,8,0,16">
+                        <StackPanel>
+                            <TextBlock Text="Budget" Style="{StaticResource H2Text}" Margin="0,0,0,16"/>
+                            <StackPanel Style="{StaticResource FormRow}">
+                                <TextBlock Text="Total Wedding Budget" Style="{StaticResource FormLabel}"/>
+                                <TextBox Text="{Binding TotalBudget, UpdateSourceTrigger=PropertyChanged}"/>
+                            </StackPanel>
+                            <StackPanel Style="{StaticResource FormRow}">
+                                <TextBlock Text="Currency Symbol" Style="{StaticResource FormLabel}"/>
+                                <TextBox Text="{Binding CurrencySymbol, UpdateSourceTrigger=PropertyChanged}" Width="60" HorizontalAlignment="Left" MaxLength="5"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <Button Style="{StaticResource PrimaryButton}" Command="{Binding SaveCommand}" HorizontalAlignment="Left">
+                        Save Settings
+                    </Button>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

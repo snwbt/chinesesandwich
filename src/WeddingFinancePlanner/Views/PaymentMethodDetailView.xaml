@@ -1,0 +1,66 @@
+<UserControl x:Class="WeddingFinancePlanner.Views.PaymentMethodDetailView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:conv="clr-namespace:WeddingFinancePlanner.Converters"
+             Background="{StaticResource BackgroundPrimaryBrush}">
+    <UserControl.Resources>
+        <conv:BoolToVisibilityConverter x:Key="BoolVis"/>
+    </UserControl.Resources>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="32" MaxWidth="560">
+            <Grid Margin="0,0,0,24">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{Binding Title}" Style="{StaticResource H1Text}" VerticalAlignment="Center"/>
+                <Button Grid.Column="1" Style="{StaticResource DangerButton}" Command="{Binding DeleteCommand}"
+                        Visibility="{Binding IsNew, Converter={StaticResource BoolVis}, ConverterParameter=invert}">Delete</Button>
+            </Grid>
+
+            <Border Style="{StaticResource CardBorder}">
+                <StackPanel>
+                    <StackPanel Style="{StaticResource FormRow}">
+                        <TextBlock Text="Name *" Style="{StaticResource FormLabel}"/>
+                        <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+                    </StackPanel>
+                    <StackPanel Style="{StaticResource FormRow}">
+                        <TextBlock Text="Type" Style="{StaticResource FormLabel}"/>
+                        <ComboBox SelectedItem="{Binding Type}">
+                            <ComboBoxItem>CreditCard</ComboBoxItem>
+                            <ComboBoxItem>DebitCard</ComboBoxItem>
+                            <ComboBoxItem>BankAccount</ComboBoxItem>
+                            <ComboBoxItem>Cash</ComboBoxItem>
+                            <ComboBoxItem>Check</ComboBoxItem>
+                            <ComboBoxItem>Venmo</ComboBoxItem>
+                            <ComboBoxItem>Zelle</ComboBoxItem>
+                            <ComboBoxItem>Other</ComboBoxItem>
+                        </ComboBox>
+                    </StackPanel>
+                    <StackPanel Style="{StaticResource FormRow}">
+                        <TextBlock Text="Owner" Style="{StaticResource FormLabel}"/>
+                        <StackPanel Orientation="Horizontal">
+                            <RadioButton Content="{Binding PartnerAName}" IsChecked="{Binding Owner, Converter={StaticResource BoolVis}}"
+                                         Margin="0,0,16,0" VerticalContentAlignment="Center"/>
+                            <RadioButton Content="{Binding PartnerBName}" VerticalContentAlignment="Center"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Style="{StaticResource FormRow}">
+                        <TextBlock Text="Last 4 Digits" Style="{StaticResource FormLabel}"/>
+                        <TextBox Text="{Binding LastFourDigits, UpdateSourceTrigger=PropertyChanged}" MaxLength="4" Width="80" HorizontalAlignment="Left"/>
+                    </StackPanel>
+                    <StackPanel Style="{StaticResource FormRow}">
+                        <TextBlock Text="Notes" Style="{StaticResource FormLabel}"/>
+                        <TextBox Text="{Binding Notes, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" Height="60" TextWrapping="Wrap"/>
+                    </StackPanel>
+                    <CheckBox Content="Active" IsChecked="{Binding IsActive}" Margin="0,0,0,16"/>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
+                        <Button Style="{StaticResource SecondaryButton}" Command="{Binding CancelCommand}" Margin="0,0,8,0">Cancel</Button>
+                        <Button Style="{StaticResource PrimaryButton}" Command="{Binding SaveCommand}">Save Method</Button>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
