@@ -1,25 +1,6 @@
-## Logs
-
-# Build artifacts
-bin/
-obj/
-
-# User-specific files
-*.user
-*.suo
-.vs/
-
-# SQLite DB files
-*.db
-*.db-shm
-*.db-wal
-
-# Design-time DB
-*_design.db
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Local AI/tooling settings (machine-specific)
-.claude/settings.local.json
+.env
+.env.local
+.env.production
+node_modules/
+.next/
+.claude/
