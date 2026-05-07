@@ -21,8 +21,7 @@ export async function middleware(request: NextRequest) {
   // Guest routes — require iron-session cookie
   const guestRoutes = ["/rsvp", "/about", "/registry", "/faq", "/travel"];
   const isGuestRoute =
-    guestRoutes.some((r) => pathname.startsWith(r)) ||
-    (pathname !== "/" && !pathname.startsWith("/admin") && !pathname.startsWith("/api") && !pathname.startsWith("/_next"));
+    guestRoutes.some((r) => pathname.startsWith(r));
 
   if (isGuestRoute) {
     const response = NextResponse.next();
