@@ -1,16 +1,17 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { auth } from "@/lib/auth";
 import { getIronSession } from "iron-session";
 import type { GuestSessionData } from "@/lib/guest-session";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Admin routes — require Auth.js session
+  // Admin routes — check for next-auth session cookie
   if (pathname.startsWith("/admin") && pathname !== "/admin/login") {
-    const session = await auth();
-    if (!session?.user) {
+    const token =
+      request.cookies.get("next-auth.session-token")?.value ||
+      request.cookies.get("__Secure-next-auth.session-token")?.value;
+    if (!token) {
       const loginUrl = new URL("/admin/login", request.url);
       loginUrl.searchParams.set("callbackUrl", pathname);
       return NextResponse.redirect(loginUrl);
@@ -19,9 +20,8 @@ export async function middleware(request: NextRequest) {
   }
 
   // Guest routes — require iron-session cookie
-  const guestRoutes = ["/rsvp", "/about", "/registry", "/faq", "/travel"];
-  const isGuestRoute =
-    guestRoutes.some((r) => pathname.startsWith(r));
+  const guestRoutes = ["/rsvp", "/about", "/registry", "/faq", "/travel", "/welcome"];
+  const isGuestRoute = guestRoutes.some((r) => pathname.startsWith(r));
 
   if (isGuestRoute) {
     const response = NextResponse.next();
